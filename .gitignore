@@ -1,1 +1,36 @@
-.gitignore
+# Скомпилированные файлы Go
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Тестовые бинарные файлы и отчёты покрытия
+*.test
+*.out
+coverage.out
+coverage.html
+
+# Папки со сборками
+bin/
+dist/
+
+# Файл рабочего пространства Go
+go.work
+go.work.sum
+
+# Переменные окружения и секреты
+.env
+.env.*
+
+# Настройки IDE
+.vscode/
+.idea/
+
+# Временные файлы редакторов
+*.swp
+*.swo
+
+# Системные файлы
+.DS_Store
+Thumbs.db
