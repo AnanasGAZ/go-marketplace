@@ -454,4 +454,5 @@ func CancelOrder(
 		operationHistory[userID],
 		fmt.Sprintf("order %d cancelled: %d", orderID, total),
 	)
+	return true
 }
