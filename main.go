@@ -26,11 +26,12 @@ var orderStatuses = map[int]string{}
 // хранит историю операций пользователя
 var operationHistory = map[int][]string{}
 
-// склад ????
+// склад
 var stocks = map[int]int{}
 
-//??
-// orderOwners := map[int]int{}
+// владелец заказа
+var orderOwners = map[int]int{}
+
 // orderTotals := map[int]int{}
 
 func main() {
@@ -455,4 +456,43 @@ func CancelOrder(
 		fmt.Sprintf("order %d cancelled: %d", orderID, total),
 	)
 	return true
+}
+
+func GetUserOrders(
+	orderOwners map[int]int, userID int,
+) []int {
+	orders := make([]int, 0)
+	//orderOwners это map[order]owner
+	for order, owner := range orderOwners {
+		if owner == userID {
+			orders = append(orders, order)
+		}
+	}
+	return orders
+}
+
+func GetOrderItems(
+	orderItems map[int]map[int]int, orderID int,
+) (map[int]int, bool) {
+	items, exists := orderItems[orderID]
+	if !exists {
+		return nil, false
+	}
+	itemsCopy := make(map[int]int, len(items))
+	for productID, quantity := range items {
+		itemsCopy[productID] = quantity
+	}
+	return itemsCopy, true
+}
+
+func GetUserHistory(
+	history map[int][]string, userID int,
+) []string {
+	userHistory, exists := history[userID]
+	if !exists {
+		return nil
+	}
+	historyCopy := make([]string, len(userHistory))
+	copy(historyCopy, userHistory) // копируем строки
+	return historyCopy
 }
