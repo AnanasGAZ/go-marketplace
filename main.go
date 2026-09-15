@@ -418,3 +418,40 @@ func Checkout(
 
 	return orderID, true
 }
+
+func CancelOrder(
+	balances map[int]int, productStocks map[int]int,
+	orderOwners map[int]int, orderItems map[int]map[int]int,
+	orderTotals map[int]int, orderStatuses map[int]string,
+	operationHistory map[int][]string,
+	userID int, orderID int,
+) bool {
+	//  1,2. Проверяем существование заказа и пользователь его владелец.
+	owner, orderExists := orderOwners[orderID]
+	if !orderExists || owner != userID {
+		return false
+	}
+	// 3. Проверить, что заказ имеет статус paid(оплаченный заказ)
+	// уже отмененный заказ "cancelled" нельзя отменить повторно.
+	// if orderStatuses[orderID] == "cancelled" {
+	// 	return false
+	// }
+	if orderStatuses[orderID] != "paid" {
+		return false
+	}
+	// 4. Возвращаем товары на склад.
+	for productID, quantity := range orderItems[orderID] {
+		productStocks[productID] += quantity
+	}
+	// 5. Возвращаем пользователю полную стоимость заказа.
+	total := orderTotals[orderID]
+	balances[userID] += total
+	// 6. Изменить статус заказа на cancelled.
+	orderStatuses[orderID] = "cancelled"
+
+	// 7. Добавляем запись в историю операций.
+	operationHistory[userID] = append(
+		operationHistory[userID],
+		fmt.Sprintf("order %d cancelled: %d", orderID, total),
+	)
+}
