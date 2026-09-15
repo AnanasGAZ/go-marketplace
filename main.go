@@ -1,10 +1,37 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 // 1. Создаём пустые мапы.
 var users = map[int]string{}
 var balances = map[int]int{}
+var productNames = map[int]string{}
+var productPrices = map[int]int{}
+var productStocks = map[int]int{}
+
+var carts = map[int]map[int]int{}
+
+// состав товара
+var orderItems = map[int]map[int]int{}
+
+// цены товаров на момент оформления
+var orderItemPrices = map[int]map[int]int{}
+
+// хранит статус заказа
+var orderStatuses = map[int]string{}
+
+// хранит историю операций пользователя
+var operationHistory = map[int][]string{}
+
+// склад ????
+var stocks = map[int]int{}
+
+//??
+// orderOwners := map[int]int{}
+// orderTotals := map[int]int{}
 
 func main() {
 	// 2. Добавляем  пользователей и начальные балансы.
@@ -119,4 +146,79 @@ func GetBalance(
 		return 0, false
 	}
 	return balances[userID], true
+}
+
+func AddProduct(
+	names map[int]string, prices map[int]int, stocks map[int]int,
+	id int, name string, price int, stock int,
+) bool {
+	if id <= 0 {
+		return false
+	}
+	if _, exists := names[id]; exists {
+		return false
+	}
+	name = strings.TrimSpace(name)
+	if name == "" {
+		return false
+	}
+	if price <= 0 {
+		return false
+	}
+	if stock < 0 { //количество товара на складе
+		return false
+	}
+
+	names[id] = name
+	prices[id] = price
+	stocks[id] = stock
+
+	return true
+
+}
+
+func GetProduct(
+	names map[int]string, prices map[int]int, stocks map[int]int,
+	productID int,
+) (string, int, int, bool) {
+	name, exists := names[productID]
+	if !exists {
+		return "", 0, 0, false
+	}
+	//Получение товара должно возвращать название, цену, остаток и признак существования.
+	return name, prices[productID], stocks[productID], true
+
+}
+
+func UpdateProductStock(
+	names map[int]string, stocks map[int]int,
+	productID int, stock int,
+) bool {
+	if _, exists := names[productID]; !exists {
+		return false
+	}
+	if stock < 0 {
+		return false
+	}
+	stocks[productID] = stock
+	return true
+}
+
+func SearchProducts(names map[int]string, query string) []int {
+	result := []int{}
+	if query == "" {
+		return result
+	}
+
+	query = strings.ToLower(strings.TrimSpace(query))
+
+	for id, name := range names {
+		name = strings.ToLower(name)
+
+		if strings.Contains(name, query) {
+			result = append(result, id)
+		}
+	}
+	return result
+
 }
