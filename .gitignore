@@ -34,3 +34,10 @@ go.work.sum
 # Системные файлы
 .DS_Store
 Thumbs.db
+
+.claude/
+
+Project-V1.pdf
+Project-V2.pdf
+Project-V3.pdf
+Project-V4.pdf
