@@ -1,7 +1,6 @@
 package main
 
 // carts[userID][productID] = количество
-// ??? корзину создаем тоже сразу, при создании пользователя?
 func AddToCart(
 	users map[int]string, products map[int]string,
 	carts map[int]map[int]int,
@@ -20,6 +19,31 @@ func AddToCart(
 		carts[userID] = map[int]int{}
 	}
 	carts[userID][productID] += quantity
+
+	return true
+}
+
+//???исоздала другой вариант функции AddToCart,
+//  которая принимает Cart и Product
+// вместо map пользователей и продуктов.
+func AddToCartV3(
+	cart Cart,
+	product Product,
+	quantity int,
+) bool {
+	if cart.UserID <= 0 {
+		return false
+	}
+
+	if product.ID <= 0 {
+		return false
+	}
+
+	if quantity <= 0 {
+		return false
+	}
+
+	cart.Items[product.ID] += quantity
 
 	return true
 }

@@ -5,7 +5,17 @@ import (
 )
 
 func main() {
-	TestV2()
+	// TestCreateValidUser()
+	// TestCreateInvalidUser()
+	// TestCreateValidProduct()
+	// TestAddProductToCart()
+	// TestCreateOrderItems()
+	// TestCreateOrder()
+	TestChangeOriginalItems()
+
+	// TestV1()
+	// TestV2()
+
 }
 func TestV2() {
 	fmt.Println("=== 1. Добавление пользователей и товаров ===")
