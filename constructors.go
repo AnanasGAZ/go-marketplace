@@ -117,8 +117,6 @@ func CalculateOrderTotal(items []OrderItem) int {
 
 func CopyOrderItems(items []OrderItem) []OrderItem {
 	copiedItems := make([]OrderItem, len(items))
-	for i, item := range items {
-		copiedItems[i] = item
-	}
+	copy(copiedItems, items) //все поля значения, поэтому можно так
 	return copiedItems
 }
