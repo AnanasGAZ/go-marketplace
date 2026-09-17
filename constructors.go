@@ -101,7 +101,9 @@ func NewOrder(
 	return Order{
 		ID:     id,
 		UserID: userID,
-		Items:  items,
+		//скопировать слайс, чтобы не менялся
+		// список в заказе, если изменится список внешний
+		Items:  CopyOrderItems(items),
 		Total:  CalculateOrderTotal(items),
 		Status: "peid",
 	}, true
