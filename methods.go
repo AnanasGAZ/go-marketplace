@@ -63,3 +63,50 @@ func (p *Product) Reserve(quantity int) bool {
 	p.Stock -= quantity
 	return true
 }
+
+// Идентификатор товара и добавляемое количество должны быть больше нуля.
+//
+//	Если товар уже есть в корзине, Add увеличивает его количество.
+//	Если в SetQuantity передано количество 0, товар удаляется.
+//	Remove возвращает false, если товара в корзине нет.
+//	Clear оставляет в корзине созданную пустую мапу.
+//
+// Особенность
+// мапы
+// Даже value receiver может изменить содержимое мапы внутри
+// структуры, потому что копия мапы ссылается на те же данные. Для
+// изменяющих методов Cart все равно используйте *Cart, чтобы
+// намерение было явным.
+func (c Cart) IsEmpty() bool {
+	return len(c.Items) == 0
+}
+func (c *Cart) Add(productID int, quantity int) bool {
+	if quantity <= 0 {
+		return false
+	}
+	c.Items[productID] += quantity
+	return true
+}
+func (c *Cart) SetQuantity(
+	productID int, quantity int,
+) bool {
+	if quantity < 0 {
+		return false
+	}
+	if quantity == 0 {
+		delete(c.Items, productID)
+	} else {
+		c.Items[productID] = quantity
+	}
+	return true
+}
+func (c *Cart) Remove(productID int) bool {
+	if _, ok := c.Items[productID]; !ok {
+		return false
+	}
+	delete(c.Items, productID)
+	return true
+}
+func (c *Cart) Clear() {
+	c.Items = make(map[int]int)
+}
