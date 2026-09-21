@@ -12,7 +12,7 @@ func main() {
 	// TestCreateOrderItems()
 	// TestCreateOrder()
 	// TestChangeOriginalItems()
-	TestTopUp()
+	TestTopUpCopy()
 
 	// TestV1()
 	// TestV2()

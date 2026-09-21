@@ -128,3 +128,15 @@ func (o *Order) MarkCancelled() bool {
 	}
 	return true
 }
+
+// Создайте пользователя с балансом 10000.
+//
+//	Передайте его в TopUpCopy и проверьте исходный баланс.
+//	Передайте его адрес в TopUpPointer и снова проверьте баланс.
+//	Коротко опишите в комментарии, почему результаты отличаются
+func TopUpCopy(user User, amount int) {
+	user.TopUp(amount)
+}
+func TopUpPointer(user *User, amount int) {
+	user.TopUp(amount)
+}
