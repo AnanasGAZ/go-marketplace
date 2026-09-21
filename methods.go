@@ -110,3 +110,21 @@ func (c *Cart) Remove(productID int) bool {
 func (c *Cart) Clear() {
 	c.Items = make(map[int]int)
 }
+
+// IsPaid проверяет статус paid.
+//	IsCancelled проверяет статус cancelled.
+//	MarkCancelled меняет только статус paid на cancelled.
+//	Повторная отмена не меняет заказ и возвращает false.
+
+func (o Order) IsPaid() bool {
+	return o.Status == "paid"
+}
+func (o Order) IsCancelled() bool {
+	return o.Status == "canceled"
+}
+func (o *Order) MarkCancelled() bool {
+	if o.Status == "canceled" {
+		return false
+	}
+	return true
+}
