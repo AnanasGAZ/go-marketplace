@@ -11,7 +11,8 @@ func main() {
 	// TestAddProductToCart()
 	// TestCreateOrderItems()
 	// TestCreateOrder()
-	TestChangeOriginalItems()
+	// TestChangeOriginalItems()
+	TestTopUp()
 
 	// TestV1()
 	// TestV2()
