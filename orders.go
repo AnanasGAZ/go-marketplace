@@ -3,19 +3,19 @@ package main
 import "fmt"
 
 func Checkout(
-	users map[int]string,
-	balances map[int]int,
-	productPrices map[int]int,
-	productStocks map[int]int,
-	carts map[int]map[int]int,
-	orderOwners map[int]int,
-	orderItems map[int]map[int]int,
-	orderItemPrices map[int]map[int]int,
-	orderTotals map[int]int,
-	orderStatuses map[int]string,
-	operationHistory map[int][]string,
-	userID int,
-) (int, bool) {
+	users map[int64]string,
+	balances map[int64]int64,
+	productPrices map[int64]int64,
+	productStocks map[int64]int64,
+	carts map[int64]map[int64]int64,
+	orderOwners map[int64]int64,
+	orderItems map[int64]map[int64]int64,
+	orderItemPrices map[int64]map[int64]int64,
+	orderTotals map[int64]int64,
+	orderStatuses map[int64]string,
+	operationHistory map[int64][]string,
+	userID int64,
+) (int64, bool) {
 	// 1. Проверяем пользователя.
 	if _, userExists := users[userID]; !userExists {
 		return 0, false
@@ -26,7 +26,7 @@ func Checkout(
 		return 0, false
 	}
 	// 3–5. Проверяем товары, остатки и  рассчитываем сумму.
-	total := 0
+	var total int64
 	for productID, quantity := range userCart {
 		if quantity <= 0 {
 			return 0, false
@@ -52,15 +52,15 @@ func Checkout(
 	//---проверки закончились, начинаем обрабатывать заказ---------
 
 	// 7. Создаём новый идентификатор заказа.
-	orderID := 1
+	orderID := int64(1)
 	for existingOrderID := range orderOwners {
 		if existingOrderID >= orderID {
 			orderID = existingOrderID + 1
 		}
 	}
 	// 8–9. Копируем товары и сохраняем цены.
-	items := map[int]int{}
-	itemPrices := map[int]int{}
+	items := map[int64]int64{}
+	itemPrices := map[int64]int64{}
 	//Заказ должен хранить отдельную копию из корзины ??? так?
 	for productID, quantity := range userCart {
 		items[productID] = quantity
@@ -96,11 +96,11 @@ func Checkout(
 }
 
 func CancelOrder(
-	balances map[int]int, productStocks map[int]int,
-	orderOwners map[int]int, orderItems map[int]map[int]int,
-	orderTotals map[int]int, orderStatuses map[int]string,
-	operationHistory map[int][]string,
-	userID int, orderID int,
+	balances map[int64]int64, productStocks map[int64]int64,
+	orderOwners map[int64]int64, orderItems map[int64]map[int64]int64,
+	orderTotals map[int64]int64, orderStatuses map[int64]string,
+	operationHistory map[int64][]string,
+	userID int64, orderID int64,
 ) bool {
 	//  1,2. Проверяем существование заказа и пользователь его владелец.
 	owner, orderExists := orderOwners[orderID]
@@ -134,9 +134,9 @@ func CancelOrder(
 }
 
 func GetUserOrders(
-	orderOwners map[int]int, userID int,
-) []int {
-	orders := make([]int, 0)
+	orderOwners map[int64]int64, userID int64,
+) []int64 {
+	orders := make([]int64, 0)
 	//orderOwners это map[order]owner
 	for order, owner := range orderOwners {
 		if owner == userID {
@@ -147,13 +147,13 @@ func GetUserOrders(
 }
 
 func GetOrderItems(
-	orderItems map[int]map[int]int, orderID int,
-) (map[int]int, bool) {
+	orderItems map[int64]map[int64]int64, orderID int64,
+) (map[int64]int64, bool) {
 	items, exists := orderItems[orderID]
 	if !exists {
 		return nil, false
 	}
-	itemsCopy := make(map[int]int, len(items))
+	itemsCopy := make(map[int64]int64, len(items))
 	for productID, quantity := range items {
 		itemsCopy[productID] = quantity
 	}

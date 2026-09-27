@@ -1,14 +1,31 @@
 package main
 
-func (u User) HasEnoughMoney(amount int) bool {
-	return u.Balance >= amount
+func (w Wallet) HasEnoughMoney(amount int64) bool {
+	return w.Balance >= amount
 }
 
 // ресивер???
-func (u *User) TopUp(amount int) bool {
+func (w *Wallet) TopUp(amount int64) bool {
 	// этот метод должен изменить u.Balance
-	u.Balance += amount
+	//Баланс и остаток товара не могут быть отрицательными.
+	if amount <= 0 || w == nil { // надо ли проверить UserID и баланс не отрицательный?
+		return false
+	}
+	//максимум тоже может стоит проверить? ну вдруг ошибка..
+	w.Balance += amount
 	return true
+}
+
+// Создайте пользователя с балансом 10000.
+//
+//	Передайте его в TopUpCopy и проверьте исходный баланс.
+//	Передайте его адрес в TopUpPointer и снова проверьте баланс.
+//	Коротко опишите в комментарии, почему результаты отличаются
+func TopUpCopy(w Wallet, amount int64) {
+	w.TopUp(amount)
+}
+func TopUpPointer(w *Wallet, amount int64) {
+	w.TopUp(amount)
 }
 
 // Сумма должна быть больше нуля.
@@ -20,14 +37,14 @@ func (u *User) TopUp(amount int) bool {
 // func (u *User) TopUp(amount int) bool //уже есть...
 
 // снятие
-func (u *User) Withdraw(amount int) bool {
+func (w *Wallet) Withdraw(amount int64) bool {
 	if amount <= 0 {
 		return false
 	}
-	if !u.HasEnoughMoney(amount) {
+	if !w.HasEnoughMoney(amount) {
 		return false
 	}
-	u.Balance -= amount
+	w.Balance -= amount
 	return true
 }
 
@@ -37,7 +54,7 @@ func (u *User) Withdraw(amount int) bool {
 //	Reserve уменьшает остаток, только если товара достаточно.
 //	Если товара недостаточно, остаток не меняется
 
-func (p Product) IsAvailable(quantity int) bool {
+func (p Product) IsAvailable(quantity int64) bool {
 	if quantity <= 0 {
 		return false
 	}
@@ -46,14 +63,14 @@ func (p Product) IsAvailable(quantity int) bool {
 	}
 	return true
 }
-func (p *Product) AddStock(quantity int) bool {
+func (p *Product) AddStock(quantity int64) bool {
 	if quantity <= 0 {
 		return false
 	}
 	p.Stock += quantity
 	return true
 }
-func (p *Product) Reserve(quantity int) bool {
+func (p *Product) Reserve(quantity int64) bool {
 	if quantity <= 0 {
 		return false
 	}
@@ -80,7 +97,7 @@ func (p *Product) Reserve(quantity int) bool {
 func (c Cart) IsEmpty() bool {
 	return len(c.Items) == 0
 }
-func (c *Cart) Add(productID int, quantity int) bool {
+func (c *Cart) Add(productID int64, quantity int64) bool {
 	if quantity <= 0 {
 		return false
 	}
@@ -88,7 +105,7 @@ func (c *Cart) Add(productID int, quantity int) bool {
 	return true
 }
 func (c *Cart) SetQuantity(
-	productID int, quantity int,
+	productID int64, quantity int64,
 ) bool {
 	if quantity < 0 {
 		return false
@@ -100,7 +117,7 @@ func (c *Cart) SetQuantity(
 	}
 	return true
 }
-func (c *Cart) Remove(productID int) bool {
+func (c *Cart) Remove(productID int64) bool {
 	if _, ok := c.Items[productID]; !ok {
 		return false
 	}
@@ -108,7 +125,7 @@ func (c *Cart) Remove(productID int) bool {
 	return true
 }
 func (c *Cart) Clear() {
-	c.Items = make(map[int]int)
+	c.Items = make(map[int64]int64)
 }
 
 // IsPaid проверяет статус paid.
@@ -120,24 +137,12 @@ func (o Order) IsPaid() bool {
 	return o.Status == "paid"
 }
 func (o Order) IsCancelled() bool {
-	return o.Status == "canceled"
+	return o.Status == "cancelled"
 }
 func (o *Order) MarkCancelled() bool {
-	if o.Status == "canceled" {
+	if o.Status == "cancelled" {
 		return false
 	}
-	o.Status = "canceled"
+	o.Status = "cancelled"
 	return true
-}
-
-// Создайте пользователя с балансом 10000.
-//
-//	Передайте его в TopUpCopy и проверьте исходный баланс.
-//	Передайте его адрес в TopUpPointer и снова проверьте баланс.
-//	Коротко опишите в комментарии, почему результаты отличаются
-func TopUpCopy(user User, amount int) {
-	user.TopUp(amount)
-}
-func TopUpPointer(user *User, amount int) {
-	user.TopUp(amount)
 }

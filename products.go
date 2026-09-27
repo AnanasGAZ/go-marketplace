@@ -6,8 +6,8 @@ import (
 )
 
 func AddProduct(
-	names map[int]string, prices map[int]int, stocks map[int]int,
-	id int, name string, price int, stock int,
+	names map[int64]string, prices map[int64]int64, stocks map[int64]int64,
+	id int64, name string, price int64, stock int64,
 ) bool {
 	if id <= 0 {
 		return false
@@ -61,9 +61,9 @@ func UpdateProductStock(
 	return true
 }
 
-func SearchProducts(names map[int]string, query string) []int {
+func SearchProducts(names map[int64]string, query string) []int64 {
 	fmt.Printf("ЗАпрос:%v\n", len(query))
-	result := []int{}
+	result := []int64{}
 	query = strings.ToLower(strings.TrimSpace(query))
 	if query == "" {
 		return result

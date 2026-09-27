@@ -5,18 +5,21 @@ import (
 )
 
 func main() {
-	// TestCreateValidUser()
-	// TestCreateInvalidUser()
-	// TestCreateValidProduct()
-	// TestAddProductToCart()
-	// TestCreateOrderItems()
-	// TestCreateOrder()
-	// TestChangeOriginalItems()
-	// TestTopUpCopy()
 	TestV4()
 
-	// TestV1()
-	// TestV2()
+	// ---V3----
+	TestCreateValidUser()
+	TestCreateInvalidUser()
+	TestCreateValidProduct()
+	TestCreateNotValidProductBedName()
+	// TestAddProductToCart()
+	TestCreateOrderItems()
+	TestCreateOrder()
+	TestChangeOriginalItems()
+	TestTopUpCopy()
+
+	TestV1()
+	TestV2()
 
 }
 func TestV2() {

@@ -2,9 +2,9 @@ package main
 
 // carts[userID][productID] = количество
 func AddToCart(
-	users map[int]string, products map[int]string,
-	carts map[int]map[int]int,
-	userID int, productID int, quantity int,
+	users map[int64]string, products map[int64]string,
+	carts map[int64]map[int64]int64,
+	userID int64, productID int64, quantity int64,
 ) bool {
 	if _, exists := users[userID]; !exists {
 		return false
@@ -16,7 +16,7 @@ func AddToCart(
 		return false
 	}
 	if _, exists := carts[userID]; !exists {
-		carts[userID] = map[int]int{}
+		carts[userID] = map[int64]int64{}
 	}
 	carts[userID][productID] += quantity
 
@@ -29,7 +29,7 @@ func AddToCart(
 func AddToCartV3(
 	cart Cart,
 	product Product,
-	quantity int,
+	quantity int64,
 ) bool {
 	if cart.UserID <= 0 {
 		return false
@@ -50,8 +50,8 @@ func AddToCartV3(
 
 // устанавливает количество уже добавленного товара в корзине
 func SetCartQuantity(
-	carts map[int]map[int]int,
-	userID int, productID int, quantity int,
+	carts map[int64]map[int64]int64,
+	userID int64, productID int64, quantity int64,
 ) bool {
 	// две проверки: есть такой пользователь? Есть такой товар?
 	userCart, userExists := carts[userID]
@@ -99,23 +99,23 @@ func RemoveFromCart(
 	delete(userCart, productID)
 	return true
 }
-func ClearCart(carts map[int]map[int]int, userID int) bool {
+func ClearCart(carts map[int64]map[int64]int64, userID int64) bool {
 	_, userExists := carts[userID]
 	if !userExists {
 		return false
 	}
 
-	carts[userID] = map[int]int{}
+	carts[userID] = map[int64]int64{}
 	return true
 }
 func CalculateCartTotal(
-	carts map[int]map[int]int, prices map[int]int, userID int,
-) (int, bool) {
+	carts map[int64]map[int64]int64, prices map[int64]int64, userID int64,
+) (int64, bool) {
 	userCart, userExists := carts[userID]
 	if !userExists {
 		return 0, false
 	}
-	total := 0
+	var total int64
 	for productID, quantity := range userCart {
 		price, productExists := prices[productID]
 		if !productExists {

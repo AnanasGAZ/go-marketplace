@@ -1,42 +1,78 @@
 package main
 
-import "strings"
+import (
+	"fmt"
+	"strings"
+	"unicode/utf8"
+)
 
 func NewUser(
-	id int, name string, balance int,
+	id int64, name string,
+	// balance int,
 ) (User, bool) {
 	if id <= 0 {
 		return User{}, false
 	}
 	// 	Имя пользователя после удаления пробелов по краям
 	// не должны быть пустыми
-	name = strings.TrimSpace(name)
-	if name == "" {
+	name, ok := normalizeName(name)
+	if !ok {
 		return User{}, false
 	}
-	//Баланс и остаток товара не могут быть отрицательными.
-	if balance < 0 {
-		return User{}, false
-	}
+
+	// //Баланс и остаток товара не могут быть отрицательными.
+	// if balance < 0 {
+	// 	return User{}, false
+	// }
 	return User{
-		ID:      id,
-		Name:    name,
-		Balance: balance,
+		ID:   id,
+		Name: name,
+		// Balance: balance,
 	}, true
 }
 
+func normalizeName(name string) (string, bool) {
+	name = strings.TrimSpace(name)
+	if name == "" {
+		fmt.Println("Пустое имя")
+		return "", false
+	}
+
+	if !utf8.ValidString(name) {
+		fmt.Println("Не корректный текст")
+		return "", false
+	}
+
+	length := utf8.RuneCountInString(name)
+	if length < 1 || length > 200 {
+		return "", false
+	}
+
+	return name, true
+}
+
+func NewWallet(userID int64) (Wallet, bool) {
+	if userID <= 0 {
+		return Wallet{}, false
+	}
+	return Wallet{
+		UserID:  userID,
+		Balance: 0,
+	}, true
+}
 func NewProduct(
-	id int, name string, price int, stock int,
+	id int64, name string, price int64, stock int64,
 ) (Product, bool) {
 	//название товара после удаления пробелов
 	// по краям не должны быть пустыми.
 	if id <= 0 {
 		return Product{}, false
 	}
-	name = strings.TrimSpace(name)
-	if name == "" {
+	name, ok := normalizeName(name)
+	if !ok {
 		return Product{}, false
 	}
+
 	//Цена товара должна быть больше нуля
 	if price <= 0 {
 		return Product{}, false
@@ -53,18 +89,18 @@ func NewProduct(
 	}, true
 }
 
-func NewCart(userID int) (Cart, bool) {
+func NewCart(userID int64) (Cart, bool) {
 	if userID <= 0 {
 		return Cart{}, false
 	}
 
 	return Cart{
 		UserID: userID,
-		Items:  make(map[int]int),
+		Items:  make(map[int64]int64),
 	}, true
 }
 
-func NewOrderItem(product Product, quantity int) (OrderItem, bool) {
+func NewOrderItem(product Product, quantity int64) (OrderItem, bool) {
 	if product.ID <= 0 {
 		return OrderItem{}, false
 	}
@@ -87,7 +123,7 @@ func NewOrderItem(product Product, quantity int) (OrderItem, bool) {
 }
 
 func NewOrder(
-	id int, userID int, items []OrderItem,
+	id int64, userID int64, items []OrderItem,
 ) (Order, bool) {
 	if id <= 0 {
 		return Order{}, false
@@ -109,8 +145,8 @@ func NewOrder(
 	}, true
 }
 
-func CalculateOrderTotal(items []OrderItem) int {
-	total := 0
+func CalculateOrderTotal(items []OrderItem) int64 {
+	var total int64 //нулевое значение автоматом
 	for _, item := range items {
 		total += item.Price * item.Quantity
 	}

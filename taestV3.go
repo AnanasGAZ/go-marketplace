@@ -4,41 +4,56 @@ import "fmt"
 
 //Создайте корректного пользователя и выведите все его поля
 func TestCreateValidUser() {
-	user, ok := NewUser(1, "  Анна  ", 50000)
+	user, ok := NewUser(1, "  Анна  ") //50000)
 
 	if !ok {
 		fmt.Println("Пользователь не создан")
 		return
 	}
-
+	wallet, ok := NewWallet(user.ID)
+	if !ok {
+		fmt.Println("Кошелек не создан")
+		return
+	}
+	wallet.TopUp(50000)
 	fmt.Println("Пользователь создан:")
 	fmt.Println("ID:", user.ID)
 	fmt.Println("Имя:", user.Name)
-	fmt.Println("Баланс:", user.Balance)
+	fmt.Println("Баланс:", wallet.Balance)
+
 }
 
 //Попробуйте создать пользователя
 // с пустым именем и отрицательным балансом.
 func TestCreateInvalidUser() {
-	user, ok := NewUser(0, "", -1000)
+	fmt.Println("Ожидаем: Пользователь не создан")
+	user, ok := NewUser(0, "") //, -1000)
 
 	if !ok {
 		fmt.Println("Пользователь не создан")
 		return
 	}
-
+	wallet, ok := NewWallet(user.ID)
+	if !ok {
+		fmt.Println("Кошелек не создан")
+		return
+	}
+	wallet.TopUp(-1000)
 	fmt.Println("Пользователь создан:")
 	fmt.Println("ID:", user.ID)
 	fmt.Println("Имя:", user.Name)
-	fmt.Println("Баланс:", user.Balance)
+	fmt.Println("Баланс:", wallet.Balance)
 }
 
 //Создайте товар с ценой 19900 и остатком 10.
 func TestCreateValidProduct() {
+	// badName := string([]byte{0xD0})
+	// product, ok := NewProduct(101, badName, 19900, 10)
+
 	product, ok := NewProduct(101, "Ноутбук", 19900, 10)
 
 	if !ok {
-		fmt.Println("Товар не создан")
+		fmt.Println("Товар не создан") //как будто message не хватает пробрасывать...
 		return
 	}
 
@@ -49,8 +64,21 @@ func TestCreateValidProduct() {
 	fmt.Println("Остаток:", product.Stock)
 }
 
+//плохое имя товара
+func TestCreateNotValidProductBedName() {
+	fmt.Println("Ожидаем: Товар не создан")
+	badName := string([]byte{0xD0})
+	_, ok := NewProduct(101, badName, 19900, 10)
+
+	if !ok {
+		fmt.Println("Товар не создан") //как будто message не хватает пробрасывать...
+		return
+	}
+	fmt.Println("Внимание! почему-то товар создался!!!")
+}
+
 //Создайте пустую корзину и добавьте товар в Cart.Items.
-func TestAddProductToCart() {
+func TestAddBadNameProductToCart() {
 	cart, ok := NewCart(1)
 	if !ok {
 		fmt.Println("Корзина не создана")
@@ -154,7 +182,7 @@ func TestCreateOrder() {
 		return
 	}
 
-	expectedTotal := 19900*2 + 1500*1
+	expectedTotal := int64(19900*2 + 1500*1)
 
 	fmt.Println("Заказ создан:", ok)
 	fmt.Println("Итоговая стоимость:", order.Total)

@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-func AddUser(users map[int]string, id int, name string) bool {
+func AddUser(users map[int64]string, id int64, name string) bool {
 	if id <= 0 {
 		return false
 	}
@@ -17,21 +17,21 @@ func AddUser(users map[int]string, id int, name string) bool {
 	AddBalances(id)
 	return true
 }
-func AddBalances(id int) {
+func AddBalances(id int64) {
 	balances[id] = 0
 }
-func GetUser(users map[int]string, id int) (string, bool) {
+func GetUser(users map[int64]string, id int64) (string, bool) {
 	val, exists := users[id]
 	return val, exists
 }
-func RenameUser(users map[int]string, id int, newName string) bool {
+func RenameUser(users map[int64]string, id int64, newName string) bool {
 	if _, exists := users[id]; !exists {
 		return false
 	}
 	users[id] = newName
 	return true
 }
-func DeleteUser(users map[int]string, id int) bool {
+func DeleteUser(users map[int64]string, id int64) bool {
 	if _, exists := users[id]; !exists {
 		return false
 	}
@@ -39,12 +39,12 @@ func DeleteUser(users map[int]string, id int) bool {
 	DeleteBalances(id)
 	return true
 }
-func DeleteBalances(id int) {
+func DeleteBalances(id int64) {
 	delete(balances, id)
 }
-func FindUsersByName(users map[int]string, query string) []int {
+func FindUsersByName(users map[int64]string, query string) []int64 {
 	query1 := strings.ToLower(query)
-	var result []int
+	var result []int64
 	for id, name := range users {
 		if strings.Contains(strings.ToLower(name), query1) {
 			result = append(result, id)
@@ -53,10 +53,10 @@ func FindUsersByName(users map[int]string, query string) []int {
 	return result
 }
 func TopUpBalance(
-	users map[int]string,
-	balances map[int]int,
-	userID int,
-	amount int,
+	users map[int64]string,
+	balances map[int64]int64,
+	userID int64,
+	amount int64,
 ) bool {
 	if _, exists := users[userID]; !exists {
 		return false
@@ -68,14 +68,14 @@ func TopUpBalance(
 	return true
 
 }
-func GetBalancePrint(in int) string {
+func GetBalancePrint(in int64) string {
 	return fmt.Sprintf("%d руб. %02d коп.", in/100, in%100)
 }
 func GetBalance(
-	users map[int]string,
-	balances map[int]int,
-	userID int,
-) (int, bool) {
+	users map[int64]string,
+	balances map[int64]int64,
+	userID int64,
+) (int64, bool) {
 	if _, exists := users[userID]; !exists {
 		return 0, false
 	}
