@@ -126,6 +126,7 @@ func (o *Order) MarkCancelled() bool {
 	if o.Status == "canceled" {
 		return false
 	}
+	o.Status = "canceled"
 	return true
 }
 
