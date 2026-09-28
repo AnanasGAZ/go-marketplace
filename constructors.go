@@ -134,23 +134,39 @@ func NewOrder(
 	if len(items) == 0 {
 		return Order{}, false
 	}
+	total, ok := CalculateOrderTotal(items)
+	if !ok {
+		return Order{}, false
+	}
+
 	return Order{
 		ID:     id,
 		UserID: userID,
 		//скопировать слайс, чтобы не менялся
 		// список в заказе, если изменится список внешний
 		Items:  CopyOrderItems(items),
-		Total:  CalculateOrderTotal(items),
+		Total:  total,
 		Status: "peid",
 	}, true
 }
 
-func CalculateOrderTotal(items []OrderItem) int64 {
+func CalculateOrderTotal(items []OrderItem) (int64, bool) {
 	var total int64 //нулевое значение автоматом
 	for _, item := range items {
-		total += item.Price * item.Quantity
+		// total += item.Price * item.Quantity
+		itemTotal, ok := checkedMulPositive(item.Price, item.Quantity)
+		if !ok {
+			fmt.Println("Цена*на количество - слишком много")
+			return 0, false
+		}
+
+		total, ok = checkedAddNonNegative(total, itemTotal)
+		if !ok {
+			fmt.Println("Цена итого- слишком много")
+			return 0, false
+		}
 	}
-	return total
+	return total, true
 }
 
 func CopyOrderItems(items []OrderItem) []OrderItem {

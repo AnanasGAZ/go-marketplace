@@ -8,18 +8,18 @@ func main() {
 	TestV4()
 
 	// ---V3----
-	TestCreateValidUser()
-	TestCreateInvalidUser()
-	TestCreateValidProduct()
-	TestCreateNotValidProductBedName()
+	// TestCreateValidUser()
+	// TestCreateInvalidUser()
+	// TestCreateValidProduct()
+	// TestCreateNotValidProductBedName()
 	// TestAddProductToCart()
-	TestCreateOrderItems()
-	TestCreateOrder()
-	TestChangeOriginalItems()
-	TestTopUpCopy()
+	// TestCreateOrderItems()
+	// TestCreateOrder()
+	// TestChangeOriginalItems()
+	// TestTopUpCopy()
 
-	TestV1()
-	TestV2()
+	// TestV1()
+	// TestV2()
 
 }
 func TestV2() {

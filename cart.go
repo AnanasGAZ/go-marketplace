@@ -18,7 +18,12 @@ func AddToCart(
 	if _, exists := carts[userID]; !exists {
 		carts[userID] = map[int64]int64{}
 	}
-	carts[userID][productID] += quantity
+	newQuantity, ok := checkedAddNonNegative(carts[userID][productID], quantity)
+	if !ok {
+		return false
+	}
+	carts[userID][productID] = newQuantity
+	// carts[userID][productID] += quantity
 
 	return true
 }
@@ -42,8 +47,12 @@ func AddToCartV3(
 	if quantity <= 0 {
 		return false
 	}
-
-	cart.Items[product.ID] += quantity
+	newQuantity, ok := checkedAddNonNegative(cart.Items[product.ID], quantity)
+	if !ok {
+		return false
+	}
+	cart.Items[product.ID] = newQuantity
+	// cart.Items[product.ID] += quantity
 
 	return true
 }

@@ -32,10 +32,12 @@ func TestV4() {
 	TestV4withdrawTooMuch(u1, w1)      //, Balance: 10000
 	TestV4reserveProduct(Product{ID: 1, Name: "Light sabr", Price: 100000, Stock: 0})
 	TestV4quantityTooMuch(Product{ID: 1, Name: "Light sabr", Price: 100000, Stock: 0})
-
+	//заполняем данные для тестта
 	u := User{ID: 1, Name: "Alex"}
 	// w := Wallet{u.ID, 10000}
-	p := Product{ID: 1, Name: "Light sabr", Price: 100000, Stock: 0}
+	// p := Product{ID: 1, Name: "Light sabr", Price: 100000, Stock: 0}
+	p := Product{ID: 1, Name: "Light sabr", Price: 9223372036854775807, Stock: 0}
+
 	c := Cart{
 		UserID: u.ID,
 		Items:  make(map[int64]int64),
@@ -44,10 +46,16 @@ func TestV4() {
 		ProductID:   p.ID,
 		ProductName: p.Name,
 		Price:       p.Price,
-		Quantity:    1}}
+		Quantity:    2}}
+	fmt.Println(oi)
+	total, ok := CalculateOrderTotal(oi)
+	if !ok {
+		fmt.Println("Итого не посчиталось")
+		return
+	}
 	o := Order{ID: 1, UserID: u.ID,
 		Items:  oi,
-		Total:  CalculateOrderTotal(oi), // в конструкторе...
+		Total:  total, // в конструкторе...
 		Status: "paid"}
 	TestV4cart(c, p, 1)
 	TestV4cartZeroDel(c, p)

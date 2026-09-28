@@ -12,7 +12,11 @@ func (w *Wallet) TopUp(amount int64) bool {
 		return false
 	}
 	//максимум тоже может стоит проверить? ну вдруг ошибка..
-	w.Balance += amount
+	newBalance, ok := checkedAddNonNegative(w.Balance, amount)
+	if !ok {
+		return false
+	}
+	w.Balance = newBalance
 	return true
 }
 
@@ -64,10 +68,15 @@ func (p Product) IsAvailable(quantity int64) bool {
 	return true
 }
 func (p *Product) AddStock(quantity int64) bool {
+	//Баланс и остаток товара не могут быть отрицательными.
 	if quantity <= 0 {
 		return false
 	}
-	p.Stock += quantity
+	newStock, ok := checkedAddNonNegative(p.Stock, quantity)
+	if !ok {
+		return false
+	}
+	p.Stock = newStock
 	return true
 }
 func (p *Product) Reserve(quantity int64) bool {
@@ -101,7 +110,12 @@ func (c *Cart) Add(productID int64, quantity int64) bool {
 	if quantity <= 0 {
 		return false
 	}
-	c.Items[productID] += quantity
+	newQuantity, ok := checkedAddNonNegative(c.Items[productID], quantity)
+	if !ok {
+		return false
+	}
+	c.Items[productID] = newQuantity
+	// c.Items[productID] += quantity
 	return true
 }
 func (c *Cart) SetQuantity(

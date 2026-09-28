@@ -64,7 +64,11 @@ func TopUpBalance(
 	if amount <= 0 {
 		return false
 	}
-	balances[userID] += amount
+	newBalance, ok := checkedAddNonNegative(balances[userID], amount)
+	if !ok {
+		return false
+	}
+	balances[userID] += newBalance
 	return true
 
 }
